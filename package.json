@@ -1,0 +1,13 @@
+{
+  "name": "nl.bwolf.packatemplate",
+  "version": "0.0.0-preview.1",
+  "displayName": "Package Template",
+  "description": "This is an example package",
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "author": {
+    "name": "Benjamin",
+    "email": "benjaminvanderwolf@gmail.com",
+    "url": "https://bvanderwolf.github.io/"
+  }
+}
