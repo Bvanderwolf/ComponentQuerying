@@ -123,7 +123,7 @@ namespace BWolf.MonoBehaviourQuerying
             }
 
             return gameObject.GetComponents<MonoBehaviour>()
-                .Where(monoBehaviour => monoBehaviourType.Any(type => type.IsAssignableFrom(monoBehaviour.GetType())))
+                .Where(monoBehaviour => monoBehaviourType.Any(type => type.IsInstanceOfType(monoBehaviour)))
                 .ToArray();
         }
 
@@ -160,15 +160,14 @@ namespace BWolf.MonoBehaviourQuerying
             {
                 // *TESTEN WAT ALS ER GEEN GEVONDEN WORDT
                 return stage.prefabContentsRoot.GetComponentsInChildren<MonoBehaviour>(includeInactive)
-                    .Where(monoBehaviour => monoBehaviourType.Any(type => type == monoBehaviour.GetType()))
+                    .Where(monoBehaviour => monoBehaviourType.Any(type => type.IsInstanceOfType(monoBehaviour)))
                     .ToArray();
             }
 #endif
 
-            // We are in a scene
-            // *UPDATEN NAAR RESOURCES.FINDOBJECTSOFTYPEALL
+            // We are in a scene and should look for objects there.
             return (includeInactive ? Resources.FindObjectsOfTypeAll<MonoBehaviour>() : Object.FindObjectsOfType<MonoBehaviour>())
-                .Where(monoBehaviour => monoBehaviourType.Any(type => type == monoBehaviour.GetType()))
+                .Where(monoBehaviour => monoBehaviourType.Any(type => type.IsInstanceOfType(monoBehaviour)))
                 .ToArray();
         }
 
