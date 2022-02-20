@@ -1,8 +1,8 @@
 {
-  "name": "nl.bwolf.packatemplate",
+  "name": "nl.bwolf.monobehaviourquerying",
   "version": "0.0.0-preview.1",
-  "displayName": "Package Template",
-  "description": "This is an example package",
+  "displayName": "MonoBehaviourQuerying",
+  "description": "This package contains scripts to query monobehaviours in your scene",
   "unity": "2019.1",
   "unityRelease": "0b5",
   "author": {
