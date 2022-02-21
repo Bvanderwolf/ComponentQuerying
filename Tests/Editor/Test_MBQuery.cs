@@ -1,5 +1,5 @@
-using System;
 using NUnit.Framework;
+using System;
 using System.Collections;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -32,16 +32,16 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         {
             // Arrange.
             MBQuery query = new MBQuery(true);
-            MonoBehaviour[] initial = query.ByType(typeof(TestComponent)).Values();
-            
+            Component[] initial = query.ByType(typeof(TestComponent)).Values();
+
             // Act.
             TestComponent created = new GameObject("Test_GameObject").AddComponent<TestComponent>();
-            MonoBehaviour[] seconds = query.Values();
-            
+            Component[] seconds = query.Values();
+
             // Assert.
-            Assert.AreNotEqual(initial.Length, seconds.Length, 
+            Assert.AreNotEqual(initial.Length, seconds.Length,
                 "Expected the created game object to be included in the query but it wasn't.");
-            
+
             // Cleanup.
             GameObject.DestroyImmediate(created);
         }
@@ -51,16 +51,16 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         {
             // Arrange.
             MBQuery query = new MBQuery();
-            MonoBehaviour[] initial = query.ByType(typeof(TestComponent)).Values();
-            
+            Component[] initial = query.ByType(typeof(TestComponent)).Values();
+
             // Act.
             TestComponent created = new GameObject("Test_GameObject").AddComponent<TestComponent>();
-            MonoBehaviour[] seconds = query.Values();
-            
+            Component[] seconds = query.Values();
+
             // Assert.
-            Assert.AreEqual(initial.Length, seconds.Length, 
+            Assert.AreEqual(initial.Length, seconds.Length,
                 "Expected the created game object not to be included in the query but it was.");
-            
+
             // Cleanup.
             GameObject.DestroyImmediate(created);
         }
@@ -70,16 +70,16 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         {
             // Arrange.
             MBQuery query = new MBQuery();
-            MonoBehaviour[] initial = query.ByType(typeof(TestComponent)).Values();
-            
+            Component[] initial = query.ByType(typeof(TestComponent)).Values();
+
             // Act.
             TestComponent created = new GameObject("Test_GameObject").AddComponent<TestComponent>();
-            MonoBehaviour[] seconds = query.Dirty().Values();
-            
+            Component[] seconds = query.Dirty().Values();
+
             // Assert.
             Assert.AreNotEqual(initial.Length, seconds.Length,
                 "Expected the created game object to be included in the query but it wasn't.");
-            
+
             // Cleanup.
             GameObject.DestroyImmediate(created);
         }
@@ -89,10 +89,10 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         {
             // Arrange.
             MBQuery query = new MBQuery();
-            
+
             // Act.
-            MonoBehaviour[] results = query.ByName("Test_ByName_Custom_Type", typeof(TestComponent)).Values();
-            
+            Component[] results = query.ByName("Test_ByName_Custom_Type", typeof(TestComponent)).Values();
+
             // Assert.
             Assert.AreEqual(2, results.Length, "Expected only the two test components to be found they weren't.");
         }
@@ -102,11 +102,11 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         {
             // Arrange.
             MBQuery query = new MBQuery();
-            
+
             // Act.
             Type[] componentTypes = new Type[] { typeof(TestComponent), typeof(CustomComponent) };
-            MonoBehaviour[] results = query.ByName("Test_ByName_Custom_Types", componentTypes).Values();
-            
+            Component[] results = query.ByName("Test_ByName_Custom_Types", componentTypes).Values();
+
             // Assert.
             Assert.AreEqual(2, results.Length, "Expected both component types to be found but they weren't.");
         }
@@ -118,12 +118,12 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
             MBQuery query = new MBQuery();
 
             // Act.
-            MonoBehaviour[] results = query.ByName("Test_ByName").Values();
+            Component[] results = query.ByName("Test_ByName").Values();
 
             // Assert.
-            Assert.AreEqual(1, results.Length, "Expected the component the game object to hold one component but it didn't.");
+            Assert.AreEqual(2, results.Length, "Expected the game object to hold two components but it didn't.");
         }
-        
+
         [Test]
         public void Test_ByName_None()
         {
@@ -131,10 +131,23 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
             MBQuery query = new MBQuery();
 
             // Act.
-            MonoBehaviour[] results = query.ByName("Test_ByName_None").Values();
+            Component[] results = query.ByName("Test_ByName_None").Values();
 
             // Assert.
-            Assert.IsEmpty(results, "Expected the component the game object to hold one component but it didn't.");
+            Assert.AreEqual(1, results.Length, "Expected the component the game object to hold one component but it didn't.");
+        }
+
+        [Test]
+        public void Test_ByTag()
+        {
+            // Arrange.
+            MBQuery query = new MBQuery();
+
+            // Act.
+            Component[] results = query.ByTag("Player", typeof(TestComponent)).Values();
+
+            // Assert.
+            Assert.AreEqual(1, results.Length, "Expected the test component to be found on the tagged game object but it wasn't.");
         }
 
         [Test]
@@ -144,7 +157,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
             MBQuery query = new MBQuery();
 
             // Act.
-            MonoBehaviour[] results = query.ByType(typeof(TestComponent)).Values();
+            Component[] results = query.ByType(true, typeof(TestComponent)).Values();
             Object[] expected = Resources.FindObjectsOfTypeAll(typeof(TestComponent));
 
             // Assert.
