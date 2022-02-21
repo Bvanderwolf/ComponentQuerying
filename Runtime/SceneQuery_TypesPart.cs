@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace BWolf.MonoBehaviourQuerying
 {
+    /// <summary>
+    /// Can be used to retrieve component instances in the scene, reuse those values
+    /// and refresh them if necessary.
+    /// </summary>
     public partial class SceneQuery
     {
         private readonly struct OnTypeQuery : ISceneQuery
