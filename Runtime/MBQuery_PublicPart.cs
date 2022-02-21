@@ -2,16 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace BWolf.MonoBehaviourQuerying
 {
     public partial class MBQuery
     {
         /*
-         - GetComponentInParent
-         - GetComponentInChildren
-         - GetComponent
-         - GetComponents
+         - Toevoegen van Enabled flag in de toekomst om disabled components wel/niet te vinden
          */
 
         private readonly List<IQuery> _queries = new List<IQuery>();
@@ -52,7 +48,7 @@ namespace BWolf.MonoBehaviourQuerying
 
         public T[] Values<T>() where T : Component
         {
-            List<T> genericValues = new List<T>();
+            var genericValues = new List<T>();
 
             // If values require auto refreshing or the query hasn't refreshed yet.
             if (autoRefresh || !_isRefreshed)
@@ -97,45 +93,60 @@ namespace BWolf.MonoBehaviourQuerying
             return this;
         }
 
-        public MBQuery OnComponent(Component fromComponent, params Type[] componentType)
+        public MBQuery OnChildren<T>(Component parentComponent, params Type[] componentType)
+            => OnChildren(parentComponent, typeof(T));
+
+        public MBQuery OnChildren(Component parentComponent, params Type[] componentType)
         {
+            _queries.Add(new OnOrFromGivenQuery(FindComponentsOnChildren, parentComponent, componentType));
             return this;
         }
 
-        public MBQuery OnComponent<T>(Component fromComponent)
+        public MBQuery OnParent<T>(Component childComponent) => OnParent(childComponent, typeof(T));
+        
+        public MBQuery OnParent(Component childComponent, params Type[] componentType)
         {
+            _queries.Add(new OnOrFromGivenQuery(FindComponentsOnParent, childComponent, componentType));
+            return this;
+        }
+        
+        public MBQuery OnGiven<T>(Component onComponent) => OnGiven(onComponent, typeof(T));
+
+        public MBQuery OnGiven(Component onComponent, params Type[] componentType)
+        {
+            _queries.Add(new OnOrFromGivenQuery(FindComponentsOnGiven, onComponent, componentType));
             return this;
         }
 
-        public MBQuery ByTag(string tagName) => ByName(tagName, typeof(Component));
+        public MBQuery OnTag(string tagName) => OnName(tagName, typeof(Component));
 
-        public MBQuery ByTag<T>(string tagName) where T : Component => ByName(tagName, typeof(T));
+        public MBQuery OnTag<T>(string tagName) where T : Component => OnName(tagName, typeof(T));
 
-        public MBQuery ByTag(string tagName, params Type[] componentType)
+        public MBQuery OnTag(string tagName, params Type[] componentType)
         {
-            _queries.Add(new OnGameObjectQuery(FindComponentsByTag, tagName, componentType));
+            _queries.Add(new OnNameOrTagQuery(FindComponentsByTag, tagName, componentType));
             return this;
         }
 
-        public MBQuery ByName(string objectName) => ByName(objectName, typeof(Component));
+        public MBQuery OnName(string objectName) => OnName(objectName, typeof(Component));
 
-        public MBQuery ByName<T>(string objectName) where T : Component => ByName(objectName, typeof(T));
+        public MBQuery OnName<T>(string objectName) where T : Component => OnName(objectName, typeof(T));
 
-        public MBQuery ByName(string objectName, params Type[] componentType)
+        public MBQuery OnName(string objectName, params Type[] componentType)
         {
-            _queries.Add(new OnGameObjectQuery(FindComponentsByName, objectName, componentType));
+            _queries.Add(new OnNameOrTagQuery(FindComponentsByName, objectName, componentType));
             return this;
         }
 
-        public MBQuery ByType() => ByType(false, typeof(Component));
+        public MBQuery OnType() => OnType(false, typeof(Component));
 
-        public MBQuery ByType(params Type[] componentType) => ByType(false, componentType);
+        public MBQuery OnType(params Type[] componentType) => OnType(false, componentType);
 
-        public MBQuery ByType<T>(bool includeInactive = false) where T : Component => ByType(includeInactive, typeof(T));
+        public MBQuery OnType<T>(bool includeInactive = false) where T : Component => OnType(includeInactive, typeof(T));
 
-        public MBQuery ByType(bool includeInactive, params Type[] componentType)
+        public MBQuery OnType(bool includeInactive, params Type[] componentType)
         {
-            _queries.Add(new OfTypeQuery(FindComponentsByType, includeInactive, componentType));
+            _queries.Add(new OnTypeQuery(FindComponentsByType, includeInactive, componentType));
             return this;
         }
     }

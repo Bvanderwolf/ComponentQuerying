@@ -82,7 +82,7 @@ namespace BWolf.MonoBehaviourQuerying.Editor
                 throw new ArgumentNullException(nameof(monoBehaviourType));
 
             Selection.objects = _query
-                .ByType(monoBehaviourType)
+                .OnType(monoBehaviourType)
                 .Values()
                 .Select(monoBehaviour => monoBehaviour.gameObject)
                 .ToArray();
@@ -97,7 +97,7 @@ namespace BWolf.MonoBehaviourQuerying.Editor
                 throw new ArgumentNullException(nameof(monoBehaviourType));
 
             Selection.objects = _query
-                .ByType(includeInActive, monoBehaviourType)
+                .OnType(includeInActive, monoBehaviourType)
                 .Values()
                 .Select(monoBehaviour => monoBehaviour.gameObject)
                 .ToArray();

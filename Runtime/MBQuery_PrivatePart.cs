@@ -12,9 +12,37 @@ namespace BWolf.MonoBehaviourQuerying
 {
     public partial class MBQuery
     {
-        private Component[] FindComponentsOnComponent(Component target, params Type[] componentType)
+        private Component[] FindComponentsOnChildren(Component parentComponent, params Type[] componentType)
         {
-            return null;
+            if (parentComponent == null)
+                throw new ArgumentNullException(nameof(parentComponent));
+
+            var components = new List<Component>(parentComponent.GetComponentsInChildren(typeof(Component)));
+            FilterComponentsUsingWhitelist(components, componentType);
+
+            return components.ToArray();
+        }
+        
+        private Component[] FindComponentsOnParent(Component childComponent, params Type[] componentType)
+        {
+            if (childComponent == null)
+                throw new ArgumentNullException(nameof(childComponent));
+
+            var components = new List<Component>(childComponent.GetComponentsInParent(typeof(Component)));
+            FilterComponentsUsingWhitelist(components, componentType);
+
+            return components.ToArray();
+        }
+        
+        private Component[] FindComponentsOnGiven(Component givenComponent, params Type[] componentType)
+        {
+            if (givenComponent == null)
+                throw new ArgumentNullException(nameof(givenComponent));
+
+            var components = new List<Component>(givenComponent.GetComponents(typeof(Component)));
+            FilterComponentsUsingWhitelist(components, componentType);
+
+            return components.ToArray();
         }
 
         private Component[] FindComponentsByTag(string tagName, params Type[] componentType)
@@ -29,7 +57,7 @@ namespace BWolf.MonoBehaviourQuerying
                 return Array.Empty<Component>();
             }
 
-            List<Component> components = new List<Component>(gameObjects.SelectMany(go => go.GetComponents<Component>()));
+            var components = new List<Component>(gameObjects.SelectMany(go => go.GetComponents<Component>()));
             FilterComponentsUsingWhitelist(components, componentType);
 
             return components.ToArray();
@@ -47,7 +75,7 @@ namespace BWolf.MonoBehaviourQuerying
                 return Array.Empty<Component>();
             }
 
-            List<Component> components = new List<Component>(gameObject.GetComponents<Component>());
+            var components = new List<Component>(gameObject.GetComponents<Component>());
             FilterComponentsUsingWhitelist(components, componentType);
 
             return components.ToArray();
@@ -64,7 +92,7 @@ namespace BWolf.MonoBehaviourQuerying
             if (componentType.Length == 0)
                 throw new ArgumentException("No mono behaviour types were given.");
 
-            List<Component> components = new List<Component>();
+            var components = new List<Component>();
 
 #if UNITY_EDITOR
             // Look for mono behaviours in the current prefab stage if we are in the editor and it exists.
