@@ -14,7 +14,7 @@ namespace BWolf.MonoBehaviourQuerying.Editor
     /// </summary>
     public static class MBScene
     {
-        private static readonly MBQuery _query = new MBQuery(true);
+        private static readonly SceneQuery _query = new SceneQuery(true);
 
         /// <summary>
         /// Returns a list of selected mono behaviours.

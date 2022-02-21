@@ -4,16 +4,9 @@ using UnityEngine;
 
 namespace BWolf.MonoBehaviourQuerying
 {
-    public partial class MBQuery
+    public partial class SceneQuery
     {
-        private interface IQuery
-        {
-            Component[] Values();
-
-            T[] Values<T>() where T : Component;
-        }
-
-        private readonly struct OnTypeQuery : IQuery
+        private readonly struct OnTypeQuery : ISceneQuery
         {
             private readonly OnTypeMethod _method;
 
@@ -45,7 +38,7 @@ namespace BWolf.MonoBehaviourQuerying
             }
         }
 
-        private readonly struct OnOrFromGivenQuery : IQuery
+        private readonly struct OnOrFromGivenQuery : ISceneQuery
         {
             private readonly OnGivenMethod _method;
 
@@ -77,7 +70,7 @@ namespace BWolf.MonoBehaviourQuerying
             }
         }
         
-        private readonly struct OnNameOrTagQuery : IQuery
+        private readonly struct OnNameOrTagQuery : ISceneQuery
         {
             private readonly OnNameOrTagMethod _method;
 

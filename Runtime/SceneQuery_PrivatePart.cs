@@ -10,7 +10,7 @@ using UnityEditor.Experimental.SceneManagement;
 
 namespace BWolf.MonoBehaviourQuerying
 {
-    public partial class MBQuery
+    public partial class SceneQuery
     {
         private Component[] FindComponentsOnChildren(Component parentComponent, params Type[] componentType)
         {

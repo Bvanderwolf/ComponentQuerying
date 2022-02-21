@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace BWolf.MonoBehaviourQuerying
 {
-    public partial class MBQuery
+    public partial class SceneQuery
     {
         /*
          - Toevoegen van Enabled flag in de toekomst om disabled components wel/niet te vinden
          */
 
-        private readonly List<IQuery> _queries = new List<IQuery>();
+        private readonly List<ISceneQuery> _queries = new List<ISceneQuery>();
 
         private readonly List<Component> _values = new List<Component>();
 
@@ -18,7 +18,7 @@ namespace BWolf.MonoBehaviourQuerying
 
         public bool autoRefresh;
 
-        public MBQuery(bool autoRefresh = false) => this.autoRefresh = autoRefresh;
+        public SceneQuery(bool autoRefresh = false) => this.autoRefresh = autoRefresh;
 
         public Component[] Values()
         {
@@ -81,70 +81,70 @@ namespace BWolf.MonoBehaviourQuerying
             return values[values.Length - 1];
         }
 
-        public MBQuery Dirty()
+        public SceneQuery Dirty()
         {
             _isRefreshed = false;
             return this;
         }
 
-        public MBQuery Clear()
+        public SceneQuery Clear()
         {
             _values.Clear();
             return this;
         }
 
-        public MBQuery OnChildren<T>(Component parentComponent, params Type[] componentType)
+        public SceneQuery OnChildren<T>(Component parentComponent, params Type[] componentType)
             => OnChildren(parentComponent, typeof(T));
 
-        public MBQuery OnChildren(Component parentComponent, params Type[] componentType)
+        public SceneQuery OnChildren(Component parentComponent, params Type[] componentType)
         {
             _queries.Add(new OnOrFromGivenQuery(FindComponentsOnChildren, parentComponent, componentType));
             return this;
         }
 
-        public MBQuery OnParent<T>(Component childComponent) => OnParent(childComponent, typeof(T));
+        public SceneQuery OnParent<T>(Component childComponent) => OnParent(childComponent, typeof(T));
         
-        public MBQuery OnParent(Component childComponent, params Type[] componentType)
+        public SceneQuery OnParent(Component childComponent, params Type[] componentType)
         {
             _queries.Add(new OnOrFromGivenQuery(FindComponentsOnParent, childComponent, componentType));
             return this;
         }
         
-        public MBQuery OnGiven<T>(Component onComponent) => OnGiven(onComponent, typeof(T));
+        public SceneQuery OnGiven<T>(Component onComponent) => OnGiven(onComponent, typeof(T));
 
-        public MBQuery OnGiven(Component onComponent, params Type[] componentType)
+        public SceneQuery OnGiven(Component onComponent, params Type[] componentType)
         {
             _queries.Add(new OnOrFromGivenQuery(FindComponentsOnGiven, onComponent, componentType));
             return this;
         }
 
-        public MBQuery OnTag(string tagName) => OnName(tagName, typeof(Component));
+        public SceneQuery OnTag(string tagName) => OnName(tagName, typeof(Component));
 
-        public MBQuery OnTag<T>(string tagName) where T : Component => OnName(tagName, typeof(T));
+        public SceneQuery OnTag<T>(string tagName) where T : Component => OnName(tagName, typeof(T));
 
-        public MBQuery OnTag(string tagName, params Type[] componentType)
+        public SceneQuery OnTag(string tagName, params Type[] componentType)
         {
             _queries.Add(new OnNameOrTagQuery(FindComponentsByTag, tagName, componentType));
             return this;
         }
 
-        public MBQuery OnName(string objectName) => OnName(objectName, typeof(Component));
+        public SceneQuery OnName(string objectName) => OnName(objectName, typeof(Component));
 
-        public MBQuery OnName<T>(string objectName) where T : Component => OnName(objectName, typeof(T));
+        public SceneQuery OnName<T>(string objectName) where T : Component => OnName(objectName, typeof(T));
 
-        public MBQuery OnName(string objectName, params Type[] componentType)
+        public SceneQuery OnName(string objectName, params Type[] componentType)
         {
             _queries.Add(new OnNameOrTagQuery(FindComponentsByName, objectName, componentType));
             return this;
         }
 
-        public MBQuery OnType() => OnType(false, typeof(Component));
+        public SceneQuery OnType() => OnType(false, typeof(Component));
 
-        public MBQuery OnType(params Type[] componentType) => OnType(false, componentType);
+        public SceneQuery OnType(params Type[] componentType) => OnType(false, componentType);
 
-        public MBQuery OnType<T>(bool includeInactive = false) where T : Component => OnType(includeInactive, typeof(T));
+        public SceneQuery OnType<T>(bool includeInactive = false) where T : Component => OnType(includeInactive, typeof(T));
 
-        public MBQuery OnType(bool includeInactive, params Type[] componentType)
+        public SceneQuery OnType(bool includeInactive, params Type[] componentType)
         {
             _queries.Add(new OnTypeQuery(FindComponentsByType, includeInactive, componentType));
             return this;
