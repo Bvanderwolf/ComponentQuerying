@@ -16,7 +16,7 @@ namespace BWolf.MonoBehaviourQuerying
     /// </summary>
     public partial class ComponentQuery
     {
-        internal class DefaultInterface : IOnGameObjectQuery, IFromComponentQuery, IOnSceneQuery
+        internal class DefaultQueryInterface : IOnGameObjectQuery, IFromComponentQuery, IOnSceneQuery
         {
             public Component[] FindComponentsOnChildren(Component parentComponent, bool includeInactive, params Type[] componentType)
             {
@@ -25,7 +25,7 @@ namespace BWolf.MonoBehaviourQuerying
 
                 var components = new List<Component>(parentComponent.GetComponentsInChildren(typeof(Component), includeInactive));
                 FilterComponentsUsingWhitelist(components, componentType);
-
+                
                 return components.ToArray();
             }
 
@@ -40,12 +40,12 @@ namespace BWolf.MonoBehaviourQuerying
                 return components.ToArray();
             }
 
-            public Component[] FindComponentsOnGameObject(Component givenComponent, params Type[] componentType)
+            public Component[] FindComponentsOnGameObject(Component siblingComponent, params Type[] componentType)
             {
-                if (givenComponent == null)
-                    throw new ArgumentNullException(nameof(givenComponent));
+                if (siblingComponent == null)
+                    throw new ArgumentNullException(nameof(siblingComponent));
 
-                var components = new List<Component>(givenComponent.GetComponents(typeof(Component)));
+                var components = new List<Component>(siblingComponent.GetComponents(typeof(Component)));
                 FilterComponentsUsingWhitelist(components, componentType);
 
                 return components.ToArray();
