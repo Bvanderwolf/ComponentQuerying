@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,6 +29,58 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         }
 
         [Test]
+        public void Test_Values_None()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+
+            // Act.
+            Component[] results = query.Values();
+
+            // Assert.
+            Assert.IsEmpty(results, "Expected no values to be returned but there were.");
+        }
+
+        [Test]
+        public void Test_Value_None()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+
+            // Act.
+            Component result = query.Value();
+
+            // Assert.
+            Assert.IsNull(result, "Expected no value to be returned but there was.");
+        }
+
+        [Test]
+        public void Test_Values_Generic_None()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+
+            // Act.
+            TestComponent[] results = query.Values<TestComponent>();
+
+            // Assert.
+            Assert.IsEmpty(results, "Expected no values to be returned but there were.");
+        }
+
+        [Test]
+        public void Test_Value_Generic_None()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+
+            // Act.
+            TestComponent result = query.Value<TestComponent>();
+
+            // Assert.
+            Assert.IsNull(result, "Expected no value to be returned but there was.");
+        }
+
+        [Test]
         public void Test_AutoRefresh_True()
         {
             // Arrange.
@@ -39,8 +92,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
             Component[] seconds = query.Values();
 
             // Assert.
-            Assert.AreNotEqual(initial.Length, seconds.Length,
-                "Expected the created game object to be included in the query but it wasn't.");
+            Assert.AreNotEqual(initial.Length, seconds.Length);
 
             // Cleanup.
             GameObject.DestroyImmediate(created);
@@ -58,8 +110,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
             Component[] seconds = query.Values();
 
             // Assert.
-            Assert.AreEqual(initial.Length, seconds.Length,
-                "Expected the created game object not to be included in the query but it was.");
+            Assert.AreEqual(initial.Length, seconds.Length);
 
             // Cleanup.
             GameObject.DestroyImmediate(created);
@@ -77,68 +128,291 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
             Component[] seconds = query.Dirty().Values();
 
             // Assert.
-            Assert.AreNotEqual(initial.Length, seconds.Length,
-                "Expected the created game object to be included in the query but it wasn't.");
+            Assert.AreNotEqual(initial.Length, seconds.Length);
 
             // Cleanup.
             GameObject.DestroyImmediate(created);
         }
 
         [Test]
-        public void Test_ByName_Custom_Type()
+        public void Test_Clear()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery().OnTag("Player");
+
+            // Act.
+            Component result = query.Clear().Value();
+
+            // Assert.
+            Assert.IsNull(result, "Expected the result after the clear to be null but it wasn't.");
+        }
+
+
+        [Test]
+        public void Test_OnChildren_All()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            Component parent = query.OnName("Test_OnChildren").Value();
+
+            // Act.
+            Component[] results = query.Clear().OnChildren(parent).Values();
+
+            // Assert.
+            int expected = 18;
+            Assert.AreEqual(expected, results.Length);
+        }
+
+        [Test]
+        public void Test_OnChildren_Type()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            Component parent = query.OnName("Test_OnChildren").Value();
+
+            // Act.
+            Component[] results = query.Clear().OnChildren(parent, typeof(TestComponent), typeof(CustomComponent)).Values();
+
+            // Assert.
+            int expected = 10;
+            Assert.AreEqual(expected, results.Length);
+        }
+
+        [Test]
+        public void Test_OnChildren_Generic()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            Component parent = query.OnName("Test_OnChildren").Value();
+
+            // Act.
+            Component[] results = query.Clear().OnChildren<CustomComponent>(parent).Values();
+
+            // Assert.
+            int expected = 4;
+            Assert.AreEqual(expected, results.Length);
+        }
+
+        [Test]
+        public void Test_OnParent_All()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            Component child = query.OnName("Test_OnParent").Value();
+
+            // Act.
+            Component[] results = query.Clear().OnParent(child).Values();
+
+            // Assert.
+            int expected = 5;
+            Assert.AreEqual(expected, results.Length);
+        }
+
+        [Test]
+        public void Test_OnParent_Type()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            Component child = query.OnName("Test_OnParent").Value();
+
+            // Act.
+            Component[] results = query.Clear().OnParent(child, typeof(TestComponent)).Values();
+
+            // Assert.
+            int expected = 2;
+            Assert.AreEqual(expected, results.Length);
+        }
+
+        [Test]
+        public void Test_OnParent_Generic()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            Component child = query.OnName("Test_OnParent").Value();
+
+            // Act.
+            Component[] results = query.Clear().OnParent<TestComponent>(child).Values();
+
+            // Assert.
+            int expected = 2;
+            Assert.AreEqual(expected, results.Length);
+        }
+
+        [Test]
+        public void Test_OnGiven_All()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            Component given = query.OnName("Test_OnGiven").Value();
+
+            // Act.
+            Component[] results = query.Clear().OnGiven(given).Values();
+
+            // Assert.
+            int expected = 3;
+            Assert.AreEqual(expected, results.Length);
+        }
+
+        [Test]
+        public void Test_OnGiven_Type()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            Component given = query.OnName("Test_OnGiven").Value();
+
+            // Act.
+            Component[] results = query.Clear().OnGiven(given, typeof(TestComponent), typeof(CustomComponent)).Values();
+
+            // Assert.
+            int expected = 2;
+            Assert.AreEqual(expected, results.Length);
+        }
+
+        [Test]
+        public void Test_OnGiven_Generic()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            Component given = query.OnName("Test_OnGiven").Value();
+
+            // Act.
+            Component[] results = query.Clear().OnGiven<TestComponent>(given).Values();
+
+            // Assert.
+            int expected = 1;
+            Assert.AreEqual(expected, results.Length);
+        }
+
+        [Test]
+        public void Test_Use_Null()
         {
             // Arrange.
             SceneQuery query = new SceneQuery();
 
             // Act.
-            Component[] results = query.OnName("Test_ByName_Custom_Type", typeof(TestComponent)).Values();
+            ISceneQuery usable = null;
+            TestDelegate action = () => query.Use(usable);
+
+            // Assert.
+            Assert.Catch<ArgumentNullException>(action, "Expected the usage of a null query to cause an exception but it didn't.");
+        }
+
+        [Test]
+        public void Test_Use()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            SceneQuery usable = new SceneQuery().OnTag("Player");
+
+            // Act.
+            Component result = query.Use(usable).Value();
+
+            // Assert.
+            Assert.NotNull(result, "Expected the usable query to be used and be successful in finding a component in the scene.");
+        }
+
+        [Test]
+        public void Test_Use_Multiple_Null()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+
+            // Act.
+            IEnumerable<ISceneQuery> usables = null;
+            TestDelegate action = () => query.Use(usables);
+
+            // Assert.
+            Assert.Catch<ArgumentNullException>(action, "Expected the usage of a null enumerable to cause an exception but it didn't.");
+        }
+
+        [Test]
+        public void Test_Use_Multiple()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+            SceneQuery[] usables = new SceneQuery[]
+            {
+                new SceneQuery().OnTag("Player"),
+                new SceneQuery().OnName("Test_OnName"),
+            };
+
+            // Act.
+            Component[] results = query.Use(usables).Values();
+
+            // Assert.
+            int expected = 5; // Transform x2 + TestComponent x2 + AudioSource x1
+            Assert.AreEqual(expected, results.Length, "Expected the usable queries to be used and be successful in finding a components in the scene.");
+        }
+
+
+        [Test]
+        public void Test_OnName_Custom_Type()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+
+            // Act.
+            Component[] results = query.OnName("Test_OnName_Custom_Type", typeof(TestComponent)).Values();
 
             // Assert.
             Assert.AreEqual(2, results.Length, "Expected only the two test components to be found they weren't.");
         }
 
         [Test]
-        public void Test_ByName_Custom_Types()
+        public void Test_OnName_Custom_Types()
         {
             // Arrange.
             SceneQuery query = new SceneQuery();
 
             // Act.
             Type[] componentTypes = new Type[] { typeof(TestComponent), typeof(CustomComponent) };
-            Component[] results = query.OnName("Test_ByName_Custom_Types", componentTypes).Values();
+            Component[] results = query.OnName("Test_OnName_Custom_Types", componentTypes).Values();
 
             // Assert.
             Assert.AreEqual(2, results.Length, "Expected both component types to be found but they weren't.");
         }
 
         [Test]
-        public void Test_ByName()
+        public void Test_OnName_All()
         {
             // Arrange.
             SceneQuery query = new SceneQuery();
 
             // Act.
-            Component[] results = query.OnName("Test_ByName").Values();
+            Component[] results = query.OnName("Test_OnName").Values();
 
             // Assert.
             Assert.AreEqual(2, results.Length, "Expected the game object to hold two components but it didn't.");
         }
 
         [Test]
-        public void Test_ByName_None()
+        public void Test_OnName_Type_None()
         {
             // Arrange.
             SceneQuery query = new SceneQuery();
 
             // Act.
-            Component[] results = query.OnName("Test_ByName_None").Values();
+            Component[] results = query.OnName("Test_OnName_None", typeof(CustomComponent)).Values();
 
             // Assert.
-            Assert.AreEqual(1, results.Length, "Expected the component the game object to hold one component but it didn't.");
+            Assert.IsEmpty(results, "Expected the component the game object to not hold the component but it did.");
         }
 
         [Test]
-        public void Test_ByTag()
+        public void Test_OnName_Generic()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+
+            // Act.
+            Component result = query.OnName<TestComponent>("Test_OnName").Value();
+
+            // Assert.
+            Assert.NotNull(result, "Expected the test component to be found on the game object but it wasn't.");
+        }
+
+        [Test]
+        public void Test_OnTag_Type()
         {
             // Arrange.
             SceneQuery query = new SceneQuery();
@@ -151,7 +425,34 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         }
 
         [Test]
-        public void Test_ByType()
+        public void Test_OnTag_All()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+
+            // Act.
+            Component[] results = query.OnTag("Player").Values();
+
+            // Assert.
+            int expected = 3;
+            Assert.AreEqual(expected, results.Length, "Expected the test component to be found on the tagged game object but it wasn't.");
+        }
+
+        [Test]
+        public void Test_OnTag_Generic()
+        {
+            // Arrange.
+            SceneQuery query = new SceneQuery();
+
+            // Act.
+            Component result = query.OnTag<AudioSource>("Player").Value();
+
+            // Assert.
+            Assert.NotNull(result, "Expected the audio source to be found on the tagger object but it wasn't.");
+        }
+
+        [Test]
+        public void Test_OnType()
         {
             // Arrange.
             SceneQuery query = new SceneQuery();

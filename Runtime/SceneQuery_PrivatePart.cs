@@ -26,7 +26,7 @@ namespace BWolf.MonoBehaviourQuerying
 
             return components.ToArray();
         }
-        
+
         private Component[] FindComponentsOnParent(Component childComponent, params Type[] componentType)
         {
             if (childComponent == null)
@@ -37,7 +37,7 @@ namespace BWolf.MonoBehaviourQuerying
 
             return components.ToArray();
         }
-        
+
         private Component[] FindComponentsOnGiven(Component givenComponent, params Type[] componentType)
         {
             if (givenComponent == null)
@@ -111,8 +111,6 @@ namespace BWolf.MonoBehaviourQuerying
 #endif
 
             // We are in a scene and should look for objects there.
-            // *Resources.FindObjectsOfAll is om ook inactive objects in de scene te vinden. Check of
-            // hij ook alle field references meepakt, want dan moeten duplicates worden verwijderd.
             components.AddRange(includeInactive ? Resources.FindObjectsOfTypeAll<Component>() : Object.FindObjectsOfType<Component>());
             FilterComponentsUsingWhitelist(components, componentType);
 
