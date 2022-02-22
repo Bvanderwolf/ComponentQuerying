@@ -63,9 +63,68 @@ namespace BWolf.MonoBehaviourQuerying
         }
 
         /// <summary>
-        /// Holds contextual information for a scene query that looks for mono behaviours on or from a given component.
+        /// Holds contextual information for a scene query that looks for mono behaviours from a given component.
         /// </summary>
-        private readonly struct OnOrFromGivenQuery : ISceneQuery
+        private readonly struct FromGivenQuery : ISceneQuery
+        {
+            /// <summary>
+            /// The method to perform the query.
+            /// </summary>
+            private readonly FromGivenMethod _method;
+
+            /// <summary>
+            /// The given component to perform the query on.
+            /// </summary>
+            private readonly Component _givenComponent;
+
+            /// <summary>
+            /// Whether to include inactive game objects in the search.
+            /// </summary>
+            private readonly bool _includeInactive;
+
+            /// <summary>
+            /// The type of component type(s) to look for.
+            /// </summary>
+            private readonly Type[] _componentTypes;
+
+            /// <summary>
+            /// Creates a new instance of the query.
+            /// </summary>
+            /// <param name="method">The method to perform the query.</param>
+            /// <param name="givenComponent">The given component to perform the query from.</param>
+            /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+            /// <param name="componentTypes">The type of component type(s) to look for.</param>
+            public FromGivenQuery(FromGivenMethod method, Component givenComponent, bool includeInactive, Type[] componentTypes)
+            {
+                _method = method;
+                _givenComponent = givenComponent;
+                _includeInactive = includeInactive;
+                _componentTypes = componentTypes;
+            }
+
+            /// <inheritdoc/>
+            public Component[] Values() => _method.Invoke(_givenComponent, _includeInactive, _componentTypes);
+
+            /// <inheritdoc/>
+            public T[] Values<T>() where T : Component
+            {
+                Component[] values = Values();
+                List<T> results = new List<T>();
+
+                for (int i = 0; i < values.Length; i++)
+                {
+                    if (values[i] is T result)
+                        results.Add(result);
+                }
+
+                return results.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Holds contextual information for a scene query that looks for mono behaviours on a given component.
+        /// </summary>
+        private readonly struct OnGivenQuery : ISceneQuery
         {
             /// <summary>
             /// The method to perform the query.
@@ -86,9 +145,9 @@ namespace BWolf.MonoBehaviourQuerying
             /// Creates a new instance of the query.
             /// </summary>
             /// <param name="method">The method to perform the query.</param>
-            /// <param name="givenComponent">The given component to perform the query on.</param>
+            /// <param name="givenComponent">The given component to perform the query from.</param>
             /// <param name="componentTypes">The type of component type(s) to look for.</param>
-            public OnOrFromGivenQuery(OnGivenMethod method, Component givenComponent, Type[] componentTypes)
+            public OnGivenQuery(OnGivenMethod method, Component givenComponent, Type[] componentTypes)
             {
                 _method = method;
                 _givenComponent = givenComponent;
@@ -175,12 +234,21 @@ namespace BWolf.MonoBehaviourQuerying
         private delegate Component[] OnNameOrTagMethod(string objectNameOrTag, Type[] componentTypes);
 
         /// <summary>
-        /// The method that looks for mono behaviours on or from a given component.
+        /// The method that looks for mono behaviours on a given component.
         /// </summary>
         /// <param name="givenComponent">The given component to perform the query on.</param>
         /// <param name="componentTypes">The type of component type(s) to look for.</param>
         /// <returns>The found component(s).</returns>
         private delegate Component[] OnGivenMethod(Component givenComponent, Type[] componentTypes);
+
+        /// <summary>
+        /// The method that looks for mono behaviours from a given component.
+        /// </summary>
+        /// <param name="givenComponent">The given component to perform the query on.</param>
+        /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+        /// <param name="componentTypes">The type of component type(s) to look for.</param>
+        /// <returns>The found component(s).</returns>
+        private delegate Component[] FromGivenMethod(Component givenComponent, bool includeInactive, Type[] componentTypes);
 
         /// <summary>
         /// The method that looks for mono behaviours of given types in the scene(s).

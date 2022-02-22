@@ -17,9 +17,6 @@ namespace BWolf.MonoBehaviourQuerying
           - doel is om Component.Query() te kunnen gebruiken zodat queries makkelijk te doen zijn vanaf components. 
           - voeg SceneQuery.OnThis, SceneQuery.OnParent en SceneQuery.OnChildren toe zodat deze queries makkelijk vanaf components te doen zijn.
            - Intern worden deze OnGiven, OnParent en OnChildren methodes gebruikt.
-         
-         - On(IQuery) methode 
-          - doel van de methode is om een query te doen op het resultaat van de gegeven query
          */
 
         /// <summary>
@@ -211,15 +208,19 @@ namespace BWolf.MonoBehaviourQuerying
         /// Internally this query uses Component.GetComponentsInChildren to get its result.
         /// </summary>
         /// <param name="parentComponent">The parent component to search from.</param>
+        /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
         /// <typeparam name="T">The type of component to look for.</typeparam>
-        public SceneQuery OnChildren<T>(Component parentComponent) => OnChildren(parentComponent, typeof(T));
+        public SceneQuery OnChildren<T>(Component parentComponent, bool includeInactive = false)
+            => OnChildren(parentComponent, includeInactive, typeof(T));
 
         /// <summary>
         /// Adds a query that looks for components in children from a given parent component.
         /// Internally this query uses Component.GetComponentsInChildren to get its result.
         /// </summary>
         /// <param name="parentComponent">The parent component to search from.</param>
-        public SceneQuery OnChildren(Component parentComponent) => OnChildren(parentComponent, typeof(Component));
+        /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+        public SceneQuery OnChildren(Component parentComponent, bool includeInactive = false)
+            => OnChildren(parentComponent, includeInactive, typeof(Component));
 
         /// <summary>
         /// Adds a query that looks for components in children from a given parent component.
@@ -227,9 +228,18 @@ namespace BWolf.MonoBehaviourQuerying
         /// </summary>
         /// <param name="parentComponent">The parent component to search from.</param>
         /// <param name="componentType">The type of component(s) to look for.</param>
-        public SceneQuery OnChildren(Component parentComponent, params Type[] componentType)
+        public SceneQuery OnChildren(Component parentComponent, params Type[] componentType) => OnChildren(parentComponent, false, componentType);
+
+        /// <summary>
+        /// Adds a query that looks for components in children from a given parent component.
+        /// Internally this query uses Component.GetComponentsInChildren to get its result.
+        /// </summary>
+        /// <param name="parentComponent">The parent component to search from.</param>
+        /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+        /// <param name="componentType">The type of component(s) to look for.</param>
+        public SceneQuery OnChildren(Component parentComponent, bool includeInactive, params Type[] componentType)
         {
-            _queries.Add(new OnOrFromGivenQuery(FindComponentsOnChildren, parentComponent, componentType));
+            _queries.Add(new FromGivenQuery(FindComponentsOnChildren, parentComponent, includeInactive, componentType));
             return this;
         }
 
@@ -239,14 +249,16 @@ namespace BWolf.MonoBehaviourQuerying
         /// </summary>
         /// <param name="childComponent">The child component to search from.</param>
         /// <typeparam name="T">The type of component to look for.</typeparam>
-        public SceneQuery OnParent<T>(Component childComponent) => OnParent(childComponent, typeof(T));
+        public SceneQuery OnParent<T>(Component childComponent, bool includeInactive = false) => OnParent(childComponent, includeInactive, typeof(T));
 
         /// <summary>
         /// Adds a query that looks for components in the parent from a given child component.
         /// Internally this query uses Component.GetComponentsInParent to get its result.
         /// </summary>
         /// <param name="childComponent">The child component to search from.</param>
-        public SceneQuery OnParent(Component childComponent) => OnParent(childComponent, typeof(Component));
+        /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+        public SceneQuery OnParent(Component childComponent, bool includeInactive = false)
+            => OnParent(childComponent, includeInactive, typeof(Component));
 
         /// <summary>
         /// Adds a query that looks for components in the parent from a given child component.
@@ -254,9 +266,18 @@ namespace BWolf.MonoBehaviourQuerying
         /// </summary>
         /// <param name="childComponent">The child component to search from.</param>
         /// <param name="componentType">The type of component(s) to look for.</param>
-        public SceneQuery OnParent(Component childComponent, params Type[] componentType)
+        public SceneQuery OnParent(Component childComponent, params Type[] componentType) => OnParent(childComponent, false, componentType);
+
+        /// <summary>
+        /// Adds a query that looks for components in the parent from a given child component.
+        /// Internally this query uses Component.GetComponentsInParent to get its result.
+        /// </summary>
+        /// <param name="childComponent">The child component to search from.</param>
+        /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+        /// <param name="componentType">The type of component(s) to look for.</param>
+        public SceneQuery OnParent(Component childComponent, bool includeInactive, params Type[] componentType)
         {
-            _queries.Add(new OnOrFromGivenQuery(FindComponentsOnParent, childComponent, componentType));
+            _queries.Add(new FromGivenQuery(FindComponentsOnParent, childComponent, includeInactive, componentType));
             return this;
         }
 
@@ -283,7 +304,7 @@ namespace BWolf.MonoBehaviourQuerying
         /// <param name="componentType">The type of component(s) to look for.</param>
         public SceneQuery OnGiven(Component onComponent, params Type[] componentType)
         {
-            _queries.Add(new OnOrFromGivenQuery(FindComponentsOnGiven, onComponent, componentType));
+            _queries.Add(new OnGivenQuery(FindComponentsOnGiven, onComponent, componentType));
             return this;
         }
 

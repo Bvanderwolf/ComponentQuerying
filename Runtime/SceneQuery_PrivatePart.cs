@@ -16,23 +16,23 @@ namespace BWolf.MonoBehaviourQuerying
     /// </summary>
     public partial class SceneQuery
     {
-        private Component[] FindComponentsOnChildren(Component parentComponent, params Type[] componentType)
+        private Component[] FindComponentsOnChildren(Component parentComponent, bool includeInactive, params Type[] componentType)
         {
             if (parentComponent == null)
                 throw new ArgumentNullException(nameof(parentComponent));
 
-            var components = new List<Component>(parentComponent.GetComponentsInChildren(typeof(Component)));
+            var components = new List<Component>(parentComponent.GetComponentsInChildren(typeof(Component), includeInactive));
             FilterComponentsUsingWhitelist(components, componentType);
 
             return components.ToArray();
         }
 
-        private Component[] FindComponentsOnParent(Component childComponent, params Type[] componentType)
+        private Component[] FindComponentsOnParent(Component childComponent, bool includeInactive, params Type[] componentType)
         {
             if (childComponent == null)
                 throw new ArgumentNullException(nameof(childComponent));
 
-            var components = new List<Component>(childComponent.GetComponentsInParent(typeof(Component)));
+            var components = new List<Component>(childComponent.GetComponentsInParent(typeof(Component), includeInactive));
             FilterComponentsUsingWhitelist(components, componentType);
 
             return components.ToArray();
