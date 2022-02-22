@@ -8,12 +8,12 @@ namespace BWolf.MonoBehaviourQuerying
     /// Can be used to retrieve component instances in the scene, reuse those values
     /// and refresh them if necessary.
     /// </summary>
-    public partial class SceneQuery
+    public partial class ComponentQuery
     {
         /// <summary>
         /// Holds contextual information for a scene query that looks for mono behaviours of given types in the scene(s).
         /// </summary>
-        private readonly struct OnTypeQuery : ISceneQuery
+        private readonly struct OnTypeQuery : IComponentQuery
         {
             /// <summary>
             /// The method to perform the query.
@@ -65,7 +65,7 @@ namespace BWolf.MonoBehaviourQuerying
         /// <summary>
         /// Holds contextual information for a scene query that looks for mono behaviours from a given component.
         /// </summary>
-        private readonly struct FromGivenQuery : ISceneQuery
+        private readonly struct FromGivenQuery : IComponentQuery
         {
             /// <summary>
             /// The method to perform the query.
@@ -122,14 +122,14 @@ namespace BWolf.MonoBehaviourQuerying
         }
 
         /// <summary>
-        /// Holds contextual information for a scene query that looks for mono behaviours on a given component.
+        /// Holds contextual information for a scene query that looks for mono behaviours on the game object a given component is on.
         /// </summary>
-        private readonly struct OnGivenQuery : ISceneQuery
+        private readonly struct OnGameObjectQuery : IComponentQuery
         {
             /// <summary>
             /// The method to perform the query.
             /// </summary>
-            private readonly OnGivenMethod _method;
+            private readonly OnGameObjectMethod _method;
 
             /// <summary>
             /// The given component to perform the query on.
@@ -147,7 +147,7 @@ namespace BWolf.MonoBehaviourQuerying
             /// <param name="method">The method to perform the query.</param>
             /// <param name="givenComponent">The given component to perform the query from.</param>
             /// <param name="componentTypes">The type of component type(s) to look for.</param>
-            public OnGivenQuery(OnGivenMethod method, Component givenComponent, Type[] componentTypes)
+            public OnGameObjectQuery(OnGameObjectMethod method, Component givenComponent, Type[] componentTypes)
             {
                 _method = method;
                 _givenComponent = givenComponent;
@@ -176,7 +176,7 @@ namespace BWolf.MonoBehaviourQuerying
         /// <summary>
         /// Holds contextual information for a scene query that looks for mono behaviours with a given name or tag.
         /// </summary>
-        private readonly struct OnNameOrTagQuery : ISceneQuery
+        private readonly struct OnNameOrTagQuery : IComponentQuery
         {
             /// <summary>
             /// The method to perform the query.
@@ -234,12 +234,12 @@ namespace BWolf.MonoBehaviourQuerying
         private delegate Component[] OnNameOrTagMethod(string objectNameOrTag, Type[] componentTypes);
 
         /// <summary>
-        /// The method that looks for mono behaviours on a given component.
+        /// The method that looks for mono behaviours on a game object a given component is on.
         /// </summary>
         /// <param name="givenComponent">The given component to perform the query on.</param>
         /// <param name="componentTypes">The type of component type(s) to look for.</param>
         /// <returns>The found component(s).</returns>
-        private delegate Component[] OnGivenMethod(Component givenComponent, Type[] componentTypes);
+        private delegate Component[] OnGameObjectMethod(Component givenComponent, Type[] componentTypes);
 
         /// <summary>
         /// The method that looks for mono behaviours from a given component.

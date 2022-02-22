@@ -3,9 +3,9 @@ using UnityEngine;
 namespace BWolf.MonoBehaviourQuerying
 {
     /// <summary>
-    /// To be implemented by objects that can query for component values in a scene or prefab stage context.
+    /// To be implemented by objects that can query for component values and return the result.
     /// </summary>
-    public interface ISceneQuery
+    public interface IComponentQuery
     {
         /// <summary>
         /// Returns component value(s) found by the query.
@@ -21,4 +21,3 @@ namespace BWolf.MonoBehaviourQuerying
         T[] Values<T>() where T : Component;
     }
 }
-

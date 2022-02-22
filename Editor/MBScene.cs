@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ namespace BWolf.MonoBehaviourQuerying.Editor
     /// </summary>
     public static class MBScene
     {
-        private static readonly SceneQuery _query = new SceneQuery(true);
+        private static readonly ComponentQuery _query = new ComponentQuery(true);
 
         /// <summary>
         /// Returns a list of selected mono behaviours.
@@ -113,29 +112,5 @@ namespace BWolf.MonoBehaviourQuerying.Editor
 
             Select(includeInactive, monoScript.GetClass());
         }
-
-        /// <summary>
-        /// Returns the path of the mono behaviour towards its greatest grandparent in the scene
-        /// in format: grandparent/parent/child.
-        /// </summary>
-        public static string GetScenePath(this MonoBehaviour monoBehaviour)
-        {
-            if (monoBehaviour == null)
-                throw new ArgumentNullException(nameof(monoBehaviour));
-
-            StringBuilder path = new StringBuilder(monoBehaviour.gameObject.name);
-            Transform parent = monoBehaviour.transform.parent;
-
-            while (parent != null)
-            {
-                path.Insert(0, '/');
-                path.Insert(0, parent.gameObject.name);
-
-                parent = parent.parent;
-            }
-
-            return path.ToString();
-        }
     }
-
 }

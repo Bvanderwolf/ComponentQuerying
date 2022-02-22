@@ -32,7 +32,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_Values_None()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Component[] results = query.Values();
@@ -45,7 +45,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_Value_None()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Component result = query.Value();
@@ -58,7 +58,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_Values_Generic_None()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             TestComponent[] results = query.Values<TestComponent>();
@@ -71,7 +71,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_Value_Generic_None()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             TestComponent result = query.Value<TestComponent>();
@@ -84,7 +84,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_AutoRefresh_True()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery(true);
+            ComponentQuery query = new ComponentQuery(true);
             Component[] initial = query.OnType(typeof(TestComponent)).Values();
 
             // Act.
@@ -102,7 +102,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_AutoRefresh_False()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
             Component[] initial = query.OnType(typeof(TestComponent)).Values();
 
             // Act.
@@ -120,7 +120,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_Dirty()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
             Component[] initial = query.OnType(typeof(TestComponent)).Values();
 
             // Act.
@@ -138,7 +138,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_Clear()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery().OnTag("Player");
+            ComponentQuery query = new ComponentQuery().OnTag("Player");
 
             // Act.
             Component result = query.Clear().Value();
@@ -152,7 +152,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnChildren_All()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
             Component parent = query.OnName("Test_OnChildren").Value();
 
             // Act.
@@ -167,7 +167,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnChildren_Type()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
             Component parent = query.OnName("Test_OnChildren").Value();
 
             // Act.
@@ -182,7 +182,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnChildren_Generic()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
             Component parent = query.OnName("Test_OnChildren").Value();
 
             // Act.
@@ -197,7 +197,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnParent_All()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
             Component child = query.OnName("Test_OnParent").Value();
 
             // Act.
@@ -212,7 +212,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnParent_Type()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
             Component child = query.OnName("Test_OnParent").Value();
 
             // Act.
@@ -227,7 +227,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnParent_Generic()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
             Component child = query.OnName("Test_OnParent").Value();
 
             // Act.
@@ -239,14 +239,14 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         }
 
         [Test]
-        public void Test_OnGiven_All()
+        public void Test_OnGameObject_All()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
-            Component given = query.OnName("Test_OnGiven").Value();
+            ComponentQuery query = new ComponentQuery();
+            Component given = query.OnName("Test_OnGameObject").Value();
 
             // Act.
-            Component[] results = query.Clear().OnGiven(given).Values();
+            Component[] results = query.Clear().OnGameObject(given).Values();
 
             // Assert.
             int expected = 3;
@@ -254,14 +254,14 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         }
 
         [Test]
-        public void Test_OnGiven_Type()
+        public void Test_OnGameObject_Type()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
-            Component given = query.OnName("Test_OnGiven").Value();
+            ComponentQuery query = new ComponentQuery();
+            Component given = query.OnName("Test_OnGameObject").Value();
 
             // Act.
-            Component[] results = query.Clear().OnGiven(given, typeof(TestComponent), typeof(CustomComponent)).Values();
+            Component[] results = query.Clear().OnGameObject(given, typeof(TestComponent), typeof(CustomComponent)).Values();
 
             // Assert.
             int expected = 2;
@@ -269,14 +269,14 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         }
 
         [Test]
-        public void Test_OnGiven_Generic()
+        public void Test_OnGameObject_Generic()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
-            Component given = query.OnName("Test_OnGiven").Value();
+            ComponentQuery query = new ComponentQuery();
+            Component given = query.OnName("Test_OnGameObject").Value();
 
             // Act.
-            Component[] results = query.Clear().OnGiven<TestComponent>(given).Values();
+            Component[] results = query.Clear().OnGameObject<TestComponent>(given).Values();
 
             // Assert.
             int expected = 1;
@@ -287,10 +287,10 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_Use_Null()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
-            ISceneQuery usable = null;
+            IComponentQuery usable = null;
             TestDelegate action = () => query.Use(usable);
 
             // Assert.
@@ -301,8 +301,8 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_Use()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
-            SceneQuery usable = new SceneQuery().OnTag("Player");
+            ComponentQuery query = new ComponentQuery();
+            ComponentQuery usable = new ComponentQuery().OnTag("Player");
 
             // Act.
             Component result = query.Use(usable).Value();
@@ -315,10 +315,10 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_Use_Multiple_Null()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
-            IEnumerable<ISceneQuery> usables = null;
+            IEnumerable<IComponentQuery> usables = null;
             TestDelegate action = () => query.Use(usables);
 
             // Assert.
@@ -329,11 +329,11 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_Use_Multiple()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
-            SceneQuery[] usables = new SceneQuery[]
+            ComponentQuery query = new ComponentQuery();
+            ComponentQuery[] usables = new ComponentQuery[]
             {
-                new SceneQuery().OnTag("Player"),
-                new SceneQuery().OnName("Test_OnName"),
+                new ComponentQuery().OnTag("Player"),
+                new ComponentQuery().OnName("Test_OnName"),
             };
 
             // Act.
@@ -349,7 +349,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnName_Custom_Type()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Component[] results = query.OnName("Test_OnName_Custom_Type", typeof(TestComponent)).Values();
@@ -362,7 +362,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnName_Custom_Types()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Type[] componentTypes = new Type[] { typeof(TestComponent), typeof(CustomComponent) };
@@ -376,7 +376,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnName_All()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Component[] results = query.OnName("Test_OnName").Values();
@@ -389,7 +389,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnName_Type_None()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Component[] results = query.OnName("Test_OnName_None", typeof(CustomComponent)).Values();
@@ -402,7 +402,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnName_Generic()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Component result = query.OnName<TestComponent>("Test_OnName").Value();
@@ -415,7 +415,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnTag_Type()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Component[] results = query.OnTag("Player", typeof(TestComponent)).Values();
@@ -428,7 +428,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnTag_All()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Component[] results = query.OnTag("Player").Values();
@@ -442,7 +442,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnTag_Generic()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Component result = query.OnTag<AudioSource>("Player").Value();
@@ -455,7 +455,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
         public void Test_OnType()
         {
             // Arrange.
-            SceneQuery query = new SceneQuery();
+            ComponentQuery query = new ComponentQuery();
 
             // Act.
             Component[] results = query.OnType(true, typeof(TestComponent)).Values();
