@@ -134,7 +134,7 @@ namespace BWolf.MonoBehaviourQuerying
             /// <summary>
             /// The sibling component to perform the query on.
             /// </summary>
-            private readonly Component _siblingComponent;
+            private readonly GameObject _gameObject;
 
             /// <summary>
             /// The type of component type(s) to look for.
@@ -145,17 +145,17 @@ namespace BWolf.MonoBehaviourQuerying
             /// Creates a new instance of the query.
             /// </summary>
             /// <param name="method">The method to perform the query.</param>
-            /// <param name="siblingComponent">The sibling component to perform the query from.</param>
+            /// <param name="gameObject">The game object to search from.</param>
             /// <param name="componentTypes">The type of component type(s) to look for.</param>
-            public OnGameObjectQuery(OnGameObjectMethod method, Component siblingComponent, Type[] componentTypes)
+            public OnGameObjectQuery(OnGameObjectMethod method, GameObject gameObject, Type[] componentTypes)
             {
                 _method = method;
-                _siblingComponent = siblingComponent;
+                _gameObject = gameObject;
                 _componentTypes = componentTypes;
             }
 
             /// <inheritdoc/>
-            public Component[] Values() => _method.Invoke(_siblingComponent, _componentTypes);
+            public Component[] Values() => _method.Invoke(_gameObject, _componentTypes);
 
             /// <inheritdoc/>
             public T[] Values<T>() where T : Component
@@ -236,10 +236,10 @@ namespace BWolf.MonoBehaviourQuerying
         /// <summary>
         /// The method that looks for mono behaviours on a game object a given component is on.
         /// </summary>
-        /// <param name="siblingComponent">The sibling component to perform the query on.</param>
+        /// <param name="gameObject">The game object to perform the query on.</param>
         /// <param name="componentTypes">The type of component type(s) to look for.</param>
         /// <returns>The found component(s).</returns>
-        private delegate Component[] OnGameObjectMethod(Component siblingComponent, Type[] componentTypes);
+        private delegate Component[] OnGameObjectMethod(GameObject gameObject, Type[] componentTypes);
 
         /// <summary>
         /// The method that looks for mono behaviours from a given component.

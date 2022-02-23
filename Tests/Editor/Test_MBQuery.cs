@@ -246,7 +246,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
             Component given = query.OnName("Test_OnGameObject").Value();
 
             // Act.
-            Component[] results = query.Clear().OnGameObject(given).Values();
+            Component[] results = query.Clear().OnGameObject(given.gameObject).Values();
 
             // Assert.
             int expected = 3;
@@ -261,7 +261,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
             Component given = query.OnName("Test_OnGameObject").Value();
 
             // Act.
-            Component[] results = query.Clear().OnGameObject(given, typeof(TestComponent), typeof(CustomComponent)).Values();
+            Component[] results = query.Clear().OnGameObject(given.gameObject, typeof(TestComponent), typeof(CustomComponent)).Values();
 
             // Assert.
             int expected = 2;
@@ -276,7 +276,7 @@ namespace BWolf.MonoBehaviourQuerying.Tests.Editor
             Component given = query.OnName("Test_OnGameObject").Value();
 
             // Act.
-            Component[] results = query.Clear().OnGameObject<TestComponent>(given).Values();
+            Component[] results = query.Clear().OnGameObject<TestComponent>(given.gameObject).Values();
 
             // Assert.
             int expected = 1;

@@ -1,12 +1,8 @@
-using System.Linq;
-using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using Object = UnityEngine.Object;
-
-#if UNITY_EDITOR
-using UnityEditor.Experimental.SceneManagement;
-#endif
 
 namespace BWolf.MonoBehaviourQuerying
 {
@@ -25,7 +21,7 @@ namespace BWolf.MonoBehaviourQuerying
 
                 var components = new List<Component>(parentComponent.GetComponentsInChildren(typeof(Component), includeInactive));
                 FilterComponentsUsingWhitelist(components, componentType);
-                
+
                 return components.ToArray();
             }
 
@@ -40,12 +36,12 @@ namespace BWolf.MonoBehaviourQuerying
                 return components.ToArray();
             }
 
-            public Component[] FindComponentsOnGameObject(Component siblingComponent, params Type[] componentType)
+            public Component[] FindComponentsOnGameObject(GameObject gameObject, params Type[] componentType)
             {
-                if (siblingComponent == null)
-                    throw new ArgumentNullException(nameof(siblingComponent));
+                if (gameObject == null)
+                    throw new ArgumentNullException(nameof(gameObject));
 
-                var components = new List<Component>(siblingComponent.GetComponents(typeof(Component)));
+                var components = new List<Component>(gameObject.GetComponents(typeof(Component)));
                 FilterComponentsUsingWhitelist(components, componentType);
 
                 return components.ToArray();
@@ -98,33 +94,19 @@ namespace BWolf.MonoBehaviourQuerying
 
                 var components = new List<Component>();
 
-                // weghalen van editor code hier.
-#if UNITY_EDITOR
-                // Look for mono behaviours in the current prefab stage if we are in the editor and it exists.
-                PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
-                if (stage != null)
-                {
-                    components.AddRange(stage.prefabContentsRoot.GetComponentsInChildren<Component>(includeInactive));
-                    FilterComponentsUsingWhitelist(components, componentType);
-
-                    return components.ToArray();
-                }
-#endif
-
                 // We are in a scene and should look for objects there.
                 components.AddRange(includeInactive ? Resources.FindObjectsOfTypeAll<Component>() : Object.FindObjectsOfType<Component>());
                 FilterComponentsUsingWhitelist(components, componentType);
 
                 return components.ToArray();
-
             }
+        }
 
-            public static void FilterComponentsUsingWhitelist(List<Component> components, Type[] whitelist)
-            {
-                for (int i = components.Count - 1; i >= 0; i--)
-                    if (!whitelist.Any(type => type.IsInstanceOfType(components[i]))) // Weghalen van LinQ hier
-                        components.RemoveAt(i);
-            }
+        protected static void FilterComponentsUsingWhitelist(List<Component> components, Type[] whitelist)
+        {
+            for (int i = components.Count - 1; i >= 0; i--)
+                if (!whitelist.Any(type => type.IsInstanceOfType(components[i]))) // Weghalen van LinQ hier
+                    components.RemoveAt(i);
         }
     }
 }
