@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 
 namespace BWolf.MonoBehaviourQuerying.Tests.Editor
 {
-    public class Test_MBQuery
+    public class Test_ComponentQuery
     {
         private Scene _currentScene;
 
