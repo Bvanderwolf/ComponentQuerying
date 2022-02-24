@@ -12,8 +12,18 @@ namespace BWolf.MonoBehaviourQuerying
     /// </summary>
     public partial class ComponentQuery
     {
+        /// <summary>
+        /// The default query interface used for retrieving components on game objects, from components
+        /// and/or in scene(s).
+        /// </summary>
         internal class DefaultQueryInterface : IOnGameObjectQuery, IFromComponentQuery, IOnSceneQuery
         {
+            /// <summary>
+            /// Looks for components in children from a given parent component.
+            /// </summary>
+            /// <param name="parentComponent">The parent component to search from.</param>
+            /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+            /// <param name="componentType">The type of component(s) to look for.</param>
             public Component[] FindComponentsOnChildren(Component parentComponent, bool includeInactive, params Type[] componentType)
             {
                 if (parentComponent == null)
@@ -25,6 +35,12 @@ namespace BWolf.MonoBehaviourQuerying
                 return components.ToArray();
             }
 
+            /// <summary>
+            /// Looks for components in the parent from a given child component.
+            /// </summary>
+            /// <param name="childComponent">The child component to search from.</param>
+            /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+            /// <param name="componentType">The type of component(s) to look for.</param>
             public Component[] FindComponentsOnParent(Component childComponent, bool includeInactive, params Type[] componentType)
             {
                 if (childComponent == null)
@@ -36,6 +52,11 @@ namespace BWolf.MonoBehaviourQuerying
                 return components.ToArray();
             }
 
+            /// <summary>
+            /// Looks for components on the game object a given component is on.
+            /// </summary>
+            /// <param name="gameObject">The game object to search from.</param>
+            /// <param name="componentType">The type of component(s) to look for.</param>
             public Component[] FindComponentsOnGameObject(GameObject gameObject, params Type[] componentType)
             {
                 if (gameObject == null)
@@ -47,6 +68,11 @@ namespace BWolf.MonoBehaviourQuerying
                 return components.ToArray();
             }
 
+            /// <summary>
+            /// Looks for components in the scene(s) attached to a game object with a given tag name.
+            /// </summary>
+            /// <param name="tagName">The name of the tag to use.</param>
+            /// <param name="componentType">The type of component(s) to look for.</param>
             public Component[] FindComponentsByTag(string tagName, params Type[] componentType)
             {
                 if (tagName == null)
@@ -65,6 +91,11 @@ namespace BWolf.MonoBehaviourQuerying
                 return components.ToArray();
             }
 
+            /// <summary>
+            /// Looks for components in the scene(s) attached to a game object with a given name.
+            /// </summary>
+            /// <param name="objectName">The name of the object to use.</param>
+            /// <param name="componentType">The type of component(s) to look for.</param>
             public Component[] FindComponentsByName(string objectName, params Type[] componentType)
             {
                 if (objectName == null)
@@ -83,7 +114,11 @@ namespace BWolf.MonoBehaviourQuerying
                 return components.ToArray();
             }
 
-
+            /// <summary>
+            /// Looks for components in the scene(s) with a given type.
+            /// </summary>
+            /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+            /// <param name="componentType">The type of component(s) to look for.</param>
             public Component[] FindComponentsByType(bool includeInactive, params Type[] componentType)
             {
                 if (componentType == null)
@@ -102,6 +137,11 @@ namespace BWolf.MonoBehaviourQuerying
             }
         }
 
+        /// <summary>
+        /// Filters a given list of components on a white list of types that should be implemented.
+        /// </summary>
+        /// <param name="components">The components to filter.</param>
+        /// <param name="whitelist">The whitelist of components to filter with.</param>
         protected static void FilterComponentsUsingWhitelist(List<Component> components, Type[] whitelist)
         {
             for (int i = components.Count - 1; i >= 0; i--)

@@ -8,10 +8,23 @@ using Object = UnityEngine.Object;
 
 namespace BWolf.MonoBehaviourQuerying.Editor
 {
+    /// <summary>
+    /// Can be used to retrieve component instances in the scene in edit mode, reuse those values
+    /// and refresh them if necessary.
+    /// </summary>
     public partial class EditorComponentQuery
     {
+        /// <summary>
+        /// The interface class used to query for component values in a scene or
+        /// prefab stage context.
+        /// </summary>
         internal class SceneQuery : IOnSceneQuery
         {
+            /// <summary>
+            /// Looks for components in the scene(s) or prefab stage attached to a game object with a given name.
+            /// </summary>
+            /// <param name="objectName">The name of the object to use.</param>
+            /// <param name="componentType">The type of component(s) to look for.</param>
             public Component[] FindComponentsByName(string objectName, params Type[] componentType)
             {
                 if (objectName == null)
@@ -49,6 +62,11 @@ namespace BWolf.MonoBehaviourQuerying.Editor
                 return components.ToArray();
             }
 
+            /// <summary>
+            /// Looks for components in the scene(s) or prefab stage attached to a game object with a given tag name.
+            /// </summary>
+            /// <param name="tagName">The name of the tag to use.</param>
+            /// <param name="componentType">The type of component(s) to look for.</param>
             public Component[] FindComponentsByTag(string tagName, params Type[] componentType)
             {
                 if (tagName == null)
@@ -61,7 +79,8 @@ namespace BWolf.MonoBehaviourQuerying.Editor
                 {
                     // Look for components in the current prefab stage if it exists.
                     GameObject root = stage.prefabContentsRoot;
-                    components.AddRange(root.GetComponentsInChildren<Component>(true).Where(component => component.tag == tagName));
+                    components.AddRange(root.GetComponentsInChildren<Component>(true)
+                        .Where(component => component.CompareTag(tagName)));
                     if (components.Count == 0)
                     {
                         Debug.LogWarning($"Failed finding a game object in the prefab stage with the tag {tagName} during query.");
@@ -86,6 +105,11 @@ namespace BWolf.MonoBehaviourQuerying.Editor
                 return components.ToArray();
             }
 
+            /// <summary>
+            /// Looks for components in the scene(s) or prefab stage with a given type.
+            /// </summary>
+            /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+            /// <param name="componentType">The type of component(s) to look for.</param>
             public Component[] FindComponentsByType(bool includeInactive, params Type[] componentType)
             {
                 if (componentType == null)
@@ -114,23 +138,33 @@ namespace BWolf.MonoBehaviourQuerying.Editor
             }
         }
 
+        /// <summary>
+        /// Looks for components on the game objects currently selected in the scene(s).
+        /// </summary>
+        public Component[] FindComponentsOnSelectedGameObjects() 
+            => FindComponentsOnSelectedGameObjects(false, false, typeof(Component));
 
-        public Component[] FindComponentsOnSelectedGameObjects()
-        {
-            if (Selection.gameObjects.Length == 0)
-                return Array.Empty<Component>();
+        /// <summary>
+        /// Looks for components on the game objects currently selected in the scene(s).
+        /// </summary>
+        /// <param name="componentType">The type(s) of component to look for.</param>
+        public Component[] FindComponentsOnSelectedGameObjects(params Type[] componentType) 
+            => FindComponentsOnSelectedGameObjects(false, false, componentType);
 
-            return FindComponentsOnSelectedGameObjects(false, false, typeof(Component));
-        }
-
-
-        public Component[] FindComponentsOnSelectedGameObjects(params Type[] componentTye) => FindComponentsOnSelectedGameObjects(false, false, componentTye);
-
-
+        /// <summary>
+        /// Looks for components on the game objects currently selected in the scene(s).
+        /// </summary>
+        /// <param name="resetSelection">Whether to reset the </param>
+        /// <param name="componentType">The type(s) of component to look for.</param>
         public Component[] FindComponentsOnSelectedGameObjects(bool resetSelection, params Type[] componentType)
             => FindComponentsOnSelectedGameObjects(false, resetSelection, componentType);
 
-
+        /// <summary>
+        /// Looks for components on game objects currently selected in the scene(s).
+        /// </summary>
+        /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+        /// <param name="resetSelection">Whether to reset the current selection of game objects.</param>
+        /// <param name="componentType">The type(s) of components to look for.</param>
         public Component[] FindComponentsOnSelectedGameObjects(bool includeInactive, bool resetSelection, params Type[] componentType)
         {
             if (componentType == null)

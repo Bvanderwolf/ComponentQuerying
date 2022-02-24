@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace BWolf.MonoBehaviourQuerying.Editor
 {
+    /// <summary>
+    /// Can be used to retrieve component instances in the scene in edit mode, reuse those values
+    /// and refresh them if necessary.
+    /// </summary>
     public partial class EditorComponentQuery : ComponentQuery
     {
         /// <summary>
@@ -47,47 +51,63 @@ namespace BWolf.MonoBehaviourQuerying.Editor
         }
 
         /// <summary>
-        /// Selects game objects with components of given type(s).
+        /// Adds a query that selects game objects with components of given type(s).
         /// </summary>
         /// <param name="componentType">The type of component(s) to look for.</param>
-        /// <returns>The found components</returns>
         public EditorComponentQuery Select(params Type[] componentType) => Select(false, componentType);
 
         /// <summary>
-        /// Selects game objects with components of mono script class type.
+        /// Adds a query that selects game objects with components of mono script class type.
         /// </summary>
         /// <param name="monoScript">The mono script of a mono behaviour class.</param>
         /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
-        /// <returns>The found components</returns>
         public EditorComponentQuery Select(MonoScript monoScript, bool includeInactive = false) => Select(includeInactive, monoScript.GetClass());
 
         /// <summary>
-        /// Selects game objects with components of given type(s).
+        /// Adds a query that selects game objects with components of given type(s).
         /// </summary>
         /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
         /// <param name="componentType">The type of component(s) to look for.</param>
-        /// <returns>The selected components</returns>
         public EditorComponentQuery Select(bool includeInactive = false, params Type[] componentType)
         {
             p_queries.Add(new SelectQuery(SelectGameObjectsWithComponents, includeInactive, componentType));
             return this;
         }
 
+        /// <summary>
+        /// Adds a query that finds components on game objects selected in the scene.
+        /// </summary>
         public EditorComponentQuery OnSelected() => OnSelected(false, false, typeof(Component));
+        
+        /// <summary>
+        /// Adds a query that finds components on game objects selected in the scene.
+        /// </summary>
+        /// <param name="componentType">The type(s) of components to look for.</param>
+        public EditorComponentQuery OnSelected(params Type[] componentType) => OnSelected(false, false, componentType);
 
-
-        public EditorComponentQuery OnSelected(params Type[] componentTye) => OnSelected(false, false, componentTye);
-
-
+        /// <summary>
+        /// Adds a query that finds components on game objects selected in the scene.
+        /// </summary>
+        /// <param name="resetSelection">Whether to reset the current selection of game objects.</param>
+        /// <param name="componentType">The type(s) of components to look for.</param>
         public EditorComponentQuery OnSelected(bool resetSelection, params Type[] componentType) => OnSelected(false, resetSelection, componentType);
 
+        /// <summary>
+        /// Adds a query that finds components on game objects selected in the scene.
+        /// </summary>
+        /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+        /// <typeparam name="T">The type of component to look for.</typeparam>
+        public EditorComponentQuery OnSelected<T>(bool includeInactive = false) where T : Component => OnSelected(includeInactive, typeof(T));
 
-        public EditorComponentQuery OnSelected<T>(bool includeInActive = false) where T : Component => OnSelected(includeInActive, typeof(T));
-
-
-        public EditorComponentQuery OnSelected(bool includeInActive, bool resetSelection, params Type[] componentType)
+        /// <summary>
+        /// Adds a query that finds components on game objects selected in the scene.
+        /// </summary>
+        /// <param name="includeInactive">Whether to include inactive game objects in the search.</param>
+        /// <param name="resetSelection">Whether to reset the current selection of game objects.</param>
+        /// <param name="componentType">The type(s) of components to look for.</param>
+        public EditorComponentQuery OnSelected(bool includeInactive, bool resetSelection, params Type[] componentType)
         {
-            p_queries.Add(new OnSelectedQuery(FindComponentsOnSelectedGameObjects, includeInActive, resetSelection, componentType));
+            p_queries.Add(new OnSelectedQuery(FindComponentsOnSelectedGameObjects, includeInactive, resetSelection, componentType));
             return this;
         }
     }
