@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BWolf.MonoBehaviourQuerying.Tests
+namespace BWolf.ComponentQuerying.Tests
 {
     public class TestComponent : MonoBehaviour
     {

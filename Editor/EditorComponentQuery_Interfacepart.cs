@@ -6,7 +6,7 @@ using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace BWolf.MonoBehaviourQuerying.Editor
+namespace BWolf.ComponentQuerying.Editor
 {
     /// <summary>
     /// Can be used to retrieve component instances in the scene in edit mode, reuse those values

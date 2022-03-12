@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BWolf.MonoBehaviourQuerying
+namespace BWolf.ComponentQuerying
 {
     /// <summary>
     /// Can be used to retrieve component instances in the scene(s), reuse those values

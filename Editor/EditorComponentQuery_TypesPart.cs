@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BWolf.MonoBehaviourQuerying.Editor
+namespace BWolf.ComponentQuerying.Editor
 {
     public partial class EditorComponentQuery
     {

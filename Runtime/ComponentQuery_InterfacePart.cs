@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace BWolf.MonoBehaviourQuerying
+namespace BWolf.ComponentQuerying
 {
     /// <summary>
     /// Can be used to retrieve component instances in the scene, reuse those values

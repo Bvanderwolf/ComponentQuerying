@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace BWolf.MonoBehaviourQuerying
+namespace BWolf.ComponentQuerying
 {
     /// <summary>
     /// To be implemented by objects that can query for component values in a scene or

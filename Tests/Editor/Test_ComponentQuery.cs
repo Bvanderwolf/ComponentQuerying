@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 
-namespace BWolf.MonoBehaviourQuerying.Tests.Editor
+namespace BWolf.ComponentQuerying.Tests.Editor
 {
     public class Test_ComponentQuery
     {
