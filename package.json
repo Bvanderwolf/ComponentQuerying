@@ -9,5 +9,12 @@
     "name": "Benjamin",
     "email": "benjaminvanderwolf@gmail.com",
     "url": "https://bvanderwolf.github.io/"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "ComponentQuery",
+      "description": "Contains example scripts to display usage of the ComponentQuery and EditorComponentQuery classes",
+      "path": "Samples~/ComponentQuery"
+    }
+  ]
 }

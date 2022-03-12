@@ -8,8 +8,15 @@ namespace BWolf.ComponentQuerying
     /// Can be used to retrieve component instances in the scene(s), reuse those values
     /// and refresh them if necessary.
     /// </summary>
+    [Serializable]
     public partial class ComponentQuery : IComponentQuery
     {
+        /// <summary>
+        /// Holds values retrieved by the query's result.
+        /// </summary>
+        [SerializeField, Tooltip("Holds values retrieved by the query's result.")]
+        private List<Component> _values = new List<Component>();
+        
         /// <summary>
         /// Whether the query should execute the query's each time before
         /// the values are retrieved.
@@ -36,11 +43,6 @@ namespace BWolf.ComponentQuerying
         /// Holds scene queries to be executed when values are retrieved.
         /// </summary>
         protected readonly List<IComponentQuery> p_queries = new List<IComponentQuery>();
-
-        /// <summary>
-        /// Holds values retrieved by the query's result.
-        /// </summary>
-        private readonly List<Component> _values = new List<Component>();
 
         /// <summary>
         /// The default interface used for querying for component values.
@@ -141,13 +143,11 @@ namespace BWolf.ComponentQuerying
 
                 _isRefreshed = true;
             }
-            else
-            {
-                // Only the generic values are returned.
-                for (int i = 0; i < _values.Count; i++)
-                    if (_values[i] is T value)
-                        genericValues.Add(value);
-            }
+            
+            // Only the generic values are returned.
+            for (int i = 0; i < _values.Count; i++)
+                if (_values[i] is T value)
+                    genericValues.Add(value);
 
             return genericValues.ToArray();
         }
