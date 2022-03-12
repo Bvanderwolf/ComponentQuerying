@@ -1,8 +1,8 @@
 {
-  "name": "nl.bwolf.monobehaviourquerying",
+  "name": "nl.bwolf.componentquerying",
   "version": "0.0.0-preview.1",
-  "displayName": "MonoBehaviourQuerying",
-  "description": "This package contains scripts to query monobehaviours in your scene",
+  "displayName": "ComponentQuerying",
+  "description": "This package contains scripts to query comoonents in your scene(s) or prefab stage",
   "unity": "2019.1",
   "unityRelease": "0b5",
   "author": {

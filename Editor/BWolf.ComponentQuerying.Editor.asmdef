@@ -1,5 +1,5 @@
 {
-    "name": "BWolf.MonoBehaviourQuerying.Editor",
+    "name": "BWolf.ComponentQuerying.Editor",
     "rootNamespace": "",
     "references": [
         "GUID:95c157759b3d7a34bb23bd5c54bd7bbb"

@@ -1,11 +1,11 @@
 {
-    "name": "BWolf.MonoBehaviourQuerying.Editor.Tests",
+    "name": "BWolf.ComponentQuerying.Editor.Tests",
     "rootNamespace": "",
     "references": [
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner",
-        "BWolf.MonoBehaviourQuerying.Tests",
-        "BWolf.MonoBehaviourQuerying"
+        "GUID:27619889b8ba8c24980f49ee34dbb44a",
+        "GUID:0acc523941302664db1f4e527237feb3",
+        "GUID:218df0ec8830b4f47a01570bd7a1219c",
+        "GUID:95c157759b3d7a34bb23bd5c54bd7bbb"
     ],
     "includePlatforms": [
         "Editor"
